@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
-from utils import logging_step_process, logging_etl_process
+from etl.utils import logging_step_process, logging_etl_process
 
 def read_excel(path: Path | str) -> pd.DataFrame:
     logging_step_process("Leyendo archivo de entrada")

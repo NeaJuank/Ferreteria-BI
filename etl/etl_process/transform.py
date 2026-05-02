@@ -1,9 +1,9 @@
 from pathlib import Path
 
 import pandas as pd
-from utils import logging_etl_process, logging_step_process
+from etl.utils import logging_etl_process, logging_step_process
 
-from utils import (
+from etl.utils import (
     normalize_header,
     normalize_text,
     parse_date,
@@ -107,7 +107,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # Resolver datos numéricos faltantes entre cantidad, valor unitario y valor total
     logging_etl_process(
-        "Resolviendo valores faltantes en cantidad / valor unitario / valor total"
+        "Resolviendo valores faltantes y calculando para cantidad / valor unitario / valor total"
     )
 
     def resolve_amounts(row: pd.Series) -> pd.Series:
@@ -156,7 +156,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df.apply(resolve_amounts, axis=1)
 
     # Calcular promedios para año/mes/día y rellenar el resto
-    logging_etl_process("Calculando promedios para año/mes/día y rellenando valores numéricos N/A")
+    logging_etl_process("Calculando promedios para año/mes/día y rellenando valores numéricos")
     averages: dict[str, int] = {}
     current_year = pd.Timestamp.now().year
     for col in {"año", "mes", "día"}:

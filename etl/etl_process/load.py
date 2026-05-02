@@ -2,16 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
-import sys
-
 import pandas as pd
 from postgrest import APIError
-
-# Add supabase directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent / "supabase"))
-
-import supabase_client # pyright: ignore[reportMissingImports]
-from utils import normalize_header, logging_etl_process, logging_step_process
+from supabaseClient.supabase_client import get_supabase_client
+from etl.utils import normalize_header, logging_etl_process, logging_step_process
 
 
 
@@ -103,9 +97,9 @@ def _pick_column(df: pd.DataFrame, candidates: list[str]) -> str | None:
 
 
 def upload_to_supabase(df: pd.DataFrame) -> None:
-    client = supabase_client.get_supabase_client()
+    client = get_supabase_client()
     
-    logging_step_process(f"cargando datos a supabase")
+    logging_step_process(f"cargando datos al cloud storage")
     # Normalizar encabezados para soportar acentos y variaciones de nombre
     df = df.rename(columns={col: normalize_header(col) for col in df.columns})
 

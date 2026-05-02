@@ -39,21 +39,30 @@ La aplicación quedará disponible en `http://localhost:3000`.
 ### Instalar dependencias
 
 ```bash
-cd "c:\Users\migue\OneDrive\Documentos\ferreteria project\Ferreteria-BI\etl_project"
 pip install -r requirements.txt
+```
+
+### Configurar variables de entorno
+
+Crea un archivo `.env` en la raíz del proyecto `Ferreteria-BI` con las siguientes variables. Quitar los $:
+
+```env
+SUPABASE_URL= $https$://wbucudmgdxzjycszfmws.supabase.co$
+SUPABASE_KEY= $sb_$secret_UpyW1e4qziE21uGtazPRtg_jrJZb_oP$
 ```
 
 ### Ejecutar pipeline ETL
 
 ```bash
-python main.py
+py -m etl.main
 ```
+
 ### Salida
 
-El archivo generado se guarda en:
+El archivo generado sale en:
 
 ```bash
-etl_project/data/output.xlsx
+etl/data/output.xlsx
 ```
 
 ## Notas

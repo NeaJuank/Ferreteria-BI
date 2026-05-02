@@ -13,7 +13,7 @@ Este proyecto contiene un pipeline ETL en Python para procesar el archivo Excel 
 1. Abre una terminal en `etl_project`:
 
 ```bash
-cd "c:\Users\migue\OneDrive\Documentos\ferreteria project\Ferreteria-BI\etl_project"
+cd "....\Ferreteria-BI"
 ```
 
 2. Crea y activa un entorno virtual:
@@ -35,7 +35,7 @@ pip install -r requirements.txt
 2. Ejecuta el script principal:
 
 ```bash
-python main.py
+py -m etl.main
 ```
 
 3. El archivo de salida se generará en:
@@ -55,33 +55,27 @@ data\output.xlsx
 
 ## Regenerar `requirements.txt`
 
-Si instalas o actualizas paquetes, genera de nuevo el archivo de dependencias con:
+Si actualizas paquetes nuevos, genera de nuevo el archivo de dependencias con:
 
 ```bash
 pip freeze > requirements.txt
 ```
 
-## Notas
-
-- Si quieres ejecutar el proyecto desde otro directorio, ajusta la ruta de entrada/salida en `main.py`.
-- El ETL está diseñado para ejecutarse directamente en Windows.
-
 ## Supabase
 
-1. Copia `etl_project/.env.example` a `etl_project/.env` y completa:
+1. Copia en `.env.example` y renombra a `.env` (está en la raiz del proyecto) y quitar los porcentajes del inicio y final:
 
-```env
-SUPABASE_URL=https://your-project-ref.supabase.co
-SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```env 
+SUPABASE_URL= $https$://wbucudmgdxzjycszfmws.supabase.co$
+SUPABASE_KEY= $sb_secret$_UpyW1e4qziE21uGtazPRtg_jrJZb_oP$
 ```
 
-2. Crea las tablas en Supabase usando `etl_project/supabase_schema.sql`.
+2. tablas de supabase por si no se desea mirar alli `supabase_schema.sql`.
 
 3. Ejecuta la limpieza total de datos si necesitas comenzar desde cero:
 
 ```bash
-cd "c:\Users\migue\OneDrive\Documentos\ferreteria project\Ferreteria-BI\etl_project"
-python supabase_clean.py
+py supabaseClient.supabase_clean
 ```
 
 Luego, para resetear los contadores de ID (evitar que sigan creciendo desde 50k):
@@ -89,10 +83,10 @@ Luego, para resetear los contadores de ID (evitar que sigan creciendo desde 50k)
 - Copia y pega el contenido de `supabase_reset_sequences.sql`
 - Ejecuta
 
-4. Sube los datos limpios al warehouse:
+4. Sube los datos limpios al warehouse si ya existe el output y no se desea generar otra vez:
 
 ```bash
-python load.py
+python etl.etl_process.load
 ```
 
 ### Qué hace la carga a Supabase
