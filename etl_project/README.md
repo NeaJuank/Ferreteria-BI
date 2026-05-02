@@ -1,0 +1,67 @@
+# ETL Project - Ferretería BI
+
+Este proyecto contiene un pipeline ETL en Python para procesar el archivo Excel de datos de la ferretería y generar un archivo limpio de salida.
+
+## Requisitos
+
+- Python 3.11+ recomendado
+- `pip` disponible
+- `venv` o cualquier entorno virtual de Python
+
+## Instalación rápida
+
+1. Abre una terminal en `etl_project`:
+
+```bash
+cd "c:\Users\migue\OneDrive\Documentos\ferreteria project\Ferreteria-BI\etl_project"
+```
+
+2. Crea y activa un entorno virtual:
+
+```bash
+python -m venv .venv
+.\.venv\Scripts\activate
+```
+
+3. Instala dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Ejecutar el ETL
+
+1. Coloca el archivo de entrada `ferreteria_50000_datos_modificado.xlsx` dentro de `etl_project`.
+2. Ejecuta el script principal:
+
+```bash
+python main.py
+```
+
+3. El archivo de salida se generará en:
+
+```bash
+data\output.xlsx
+```
+
+## Qué hace el pipeline
+
+- Lee el Excel de entrada.
+- Normaliza los encabezados y valores de texto.
+- Convierte fechas a formato `YYYY-MM-DD` y elimina la hora.
+- Da formato a valores numéricos de `valor unitario` y `valor total` sin centavos.
+- Rellena campos vacíos con `N/A`.
+- Aplica correcciones de datos mal ubicados (por ejemplo, ciudades que aparecen en columnas incorrectas).
+
+## Regenerar `requirements.txt`
+
+Si instalas o actualizas paquetes, genera de nuevo el archivo de dependencias con:
+
+```bash
+pip freeze > requirements.txt
+```
+
+## Notas
+
+- Si quieres ejecutar el proyecto desde otro directorio, ajusta la ruta de entrada/salida en `main.py`.
+- El ETL está diseñado para ejecutarse directamente en Windows.

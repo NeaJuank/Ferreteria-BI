@@ -29,6 +29,22 @@ export default function App() {
   const [isExporting, setIsExporting] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
   
+  useEffect(() => {
+    console.log('Dashboard cargado');
+  }, []);
+
+  useEffect(() => {
+    console.log('Búsqueda actualizada:', searchQuery);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    console.log('Filtros actualizados:', filters);
+  }, [filters]);
+
+  useEffect(() => {
+    console.log('Pestaña activa:', activeTab);
+  }, [activeTab]);
+
   // States for filters
   const [filters, setFilters] = useState({
     periodo: 'Este Mes',
@@ -59,9 +75,16 @@ export default function App() {
     { label: 'Total Clientes', value: '1,248', trend: 4.1, icon: Users, color: 'bg-sky-50 text-sky-700' },
   ];
 
+  useEffect(() => {
+    console.log(`Transacciones filtradas: ${filteredTransactions.length}`);
+  }, [filteredTransactions.length]);
+
   const handleExport = () => {
+    console.log('Inicio de exportación de reporte');
     setIsExporting(true);
+    console.log('Procesando exportación...');
     setTimeout(() => {
+      console.log('Exportación completada');
       setIsExporting(false);
       setShowToast('Reporte exportado con éxito (Simulado)');
       setTimeout(() => setShowToast(null), 3000);

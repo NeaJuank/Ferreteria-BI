@@ -13,7 +13,7 @@ import {
   Legend
 } from 'recharts';
 
-import { MonthlyData, CategoryData } from '../types';
+import { MonthlyData, CategoryData } from '../services/types';
 
 // --- Monthly Sales Chart ---
 export function MonthlySalesChart({ data }: { data: MonthlyData[] }) {

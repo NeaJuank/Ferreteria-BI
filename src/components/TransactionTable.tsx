@@ -1,6 +1,6 @@
 import React from 'react';
 import { Filter, Search, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import { Transaction } from '../types';
+import { Transaction } from '../services/types';
 
 const transactions: Transaction[] = [
   { id: '1', invoice: '#INV-8902', date: '24 Oct 2023', salesperson: 'Carlos Ruiz', product: 'Kit Herramientas Pro', quantity: 12, total: 1450, initials: 'CR' },
