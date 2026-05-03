@@ -66,8 +66,8 @@ pip freeze > requirements.txt
 1. Copia en `.env.example` y renombra a `.env` (está en la raiz del proyecto) y quitar los porcentajes del inicio y final:
 
 ```env 
-SUPABASE_URL= $https$://wbucudmgdxzjycszfmws.supabase.co$
-SUPABASE_KEY= $sb_secret$_UpyW1e4qziE21uGtazPRtg_jrJZb_oP$
+VITE_SUPABASE_URL= $https$://wbucudmgdxzjycszfmws.supabase.co$
+VITE_SUPABASE_KEY= $sb_secret$_UpyW1e4qziE21uGtazPRtg_jrJZb_oP$
 ```
 
 2. tablas de supabase por si no se desea mirar alli `supabase_schema.sql`.

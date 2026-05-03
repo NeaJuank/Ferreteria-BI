@@ -25,12 +25,12 @@ def load_env(path: Path | str = Path(__file__).parent.parent / ".env") -> None:
 
 def get_supabase_client(env_path: Path | str = Path(__file__).parent.parent / ".env") -> Client:
     load_env(env_path)
-    url = os.environ.get("SUPABASE_URL")
-    key = os.environ.get("SUPABASE_KEY")
+    url = os.environ.get("VITE_SUPABASE_URL")
+    key = os.environ.get("VITE_SUPABASE_KEY")
 
     if not url or not key:
         raise EnvironmentError(
-            "SUPABASE_URL y SUPABASE_KEY deben estar configurados en el entorno o en el archivo .env"
+            "VITE_SUPABASE_URL y VITE_SUPABASE_KEY deben estar configurados en el entorno o en el archivo .env"
         )
 
     return create_client(url, key)

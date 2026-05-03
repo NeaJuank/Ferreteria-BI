@@ -27,11 +27,11 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
             <tr>
               <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Factura</th>
               <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Fecha</th>
-              <th className="px-6 py-4 text-[10px) font-bold text-slate-400 uppercase tracking-wider">Vendedor</th>
-              <th className="px-6 py-4 text-[10px) font-bold text-slate-400 uppercase tracking-wider">Producto</th>
-              <th className="px-6 py-4 text-[10px) font-bold text-slate-400 uppercase tracking-wider text-center">Cantidad</th>
-              <th className="px-6 py-4 text-[10px) font-bold text-slate-400 uppercase tracking-wider text-right">V. Total</th>
-              <th className="px-6 py-4 text-[10px) font-bold text-slate-400 uppercase tracking-wider text-right"></th>
+              <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vendedor</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Producto</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Cantidad</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">V. Total</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">

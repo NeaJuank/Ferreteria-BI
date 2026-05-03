@@ -29,6 +29,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@google/genai", "virtual:d512814f288423f796435fbfdec5bd72ba9c19d88de716005caf5c2f1407913db46dd3166ebdc0f25a4a6d880cd575de6d136884f2f0c4076bd199300af9b672#npm:1.51.0"],\
+          ["@supabase/supabase-js", "npm:2.105.1"],\
           ["@tailwindcss/vite", "virtual:d512814f288423f796435fbfdec5bd72ba9c19d88de716005caf5c2f1407913db46dd3166ebdc0f25a4a6d880cd575de6d136884f2f0c4076bd199300af9b672#npm:4.2.4"],\
           ["@types/express", "npm:4.17.25"],\
           ["@types/node", "npm:22.19.17"],\
@@ -780,7 +781,7 @@ const RAW_RUNTIME_STATE =
           ["google-auth-library", "npm:10.6.2"],\
           ["p-retry", "npm:4.6.2"],\
           ["protobufjs", "npm:7.5.6"],\
-          ["ws", "virtual:7d4aeab221a3278b2429280db48babb12944e108da46333824fc8699825d0ec749b0ad960e7dc27c80d6820360f931d9e1244d9fdf55d3eabd35804f95a2f25c#npm:8.20.0"]\
+          ["ws", "virtual:9c639ac2ee673bc23b8267a7175e5aa7148d65f86dad5b360291211e2bb3f0257ddf7c7eaa660d754d62abc04b1223791e5b6467f16153c7921f275b48aa409b#npm:8.20.0"]\
         ],\
         "packagePeers": [\
           "@modelcontextprotocol/sdk",\
@@ -1249,6 +1250,83 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@standard-schema-utils-npm-0.3.0-37537c524c-10c0.zip/node_modules/@standard-schema/utils/",\
         "packageDependencies": [\
           ["@standard-schema/utils", "npm:0.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@supabase/auth-js", [\
+      ["npm:2.105.1", {\
+        "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@supabase-auth-js-npm-2.105.1-9f0849e34c-10c0.zip/node_modules/@supabase/auth-js/",\
+        "packageDependencies": [\
+          ["@supabase/auth-js", "npm:2.105.1"],\
+          ["tslib", "npm:2.8.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@supabase/functions-js", [\
+      ["npm:2.105.1", {\
+        "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@supabase-functions-js-npm-2.105.1-14ecd2831a-10c0.zip/node_modules/@supabase/functions-js/",\
+        "packageDependencies": [\
+          ["@supabase/functions-js", "npm:2.105.1"],\
+          ["tslib", "npm:2.8.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@supabase/phoenix", [\
+      ["npm:0.4.1", {\
+        "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@supabase-phoenix-npm-0.4.1-21e892a863-10c0.zip/node_modules/@supabase/phoenix/",\
+        "packageDependencies": [\
+          ["@supabase/phoenix", "npm:0.4.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@supabase/postgrest-js", [\
+      ["npm:2.105.1", {\
+        "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@supabase-postgrest-js-npm-2.105.1-6d3e374788-10c0.zip/node_modules/@supabase/postgrest-js/",\
+        "packageDependencies": [\
+          ["@supabase/postgrest-js", "npm:2.105.1"],\
+          ["tslib", "npm:2.8.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@supabase/realtime-js", [\
+      ["npm:2.105.1", {\
+        "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@supabase-realtime-js-npm-2.105.1-9c639ac2ee-10c0.zip/node_modules/@supabase/realtime-js/",\
+        "packageDependencies": [\
+          ["@supabase/phoenix", "npm:0.4.1"],\
+          ["@supabase/realtime-js", "npm:2.105.1"],\
+          ["@types/ws", "npm:8.18.1"],\
+          ["tslib", "npm:2.8.1"],\
+          ["ws", "virtual:9c639ac2ee673bc23b8267a7175e5aa7148d65f86dad5b360291211e2bb3f0257ddf7c7eaa660d754d62abc04b1223791e5b6467f16153c7921f275b48aa409b#npm:8.20.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@supabase/storage-js", [\
+      ["npm:2.105.1", {\
+        "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@supabase-storage-js-npm-2.105.1-39f1680e14-10c0.zip/node_modules/@supabase/storage-js/",\
+        "packageDependencies": [\
+          ["@supabase/storage-js", "npm:2.105.1"],\
+          ["iceberg-js", "npm:0.8.1"],\
+          ["tslib", "npm:2.8.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@supabase/supabase-js", [\
+      ["npm:2.105.1", {\
+        "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@supabase-supabase-js-npm-2.105.1-d057fd4c28-10c0.zip/node_modules/@supabase/supabase-js/",\
+        "packageDependencies": [\
+          ["@supabase/auth-js", "npm:2.105.1"],\
+          ["@supabase/functions-js", "npm:2.105.1"],\
+          ["@supabase/postgrest-js", "npm:2.105.1"],\
+          ["@supabase/realtime-js", "npm:2.105.1"],\
+          ["@supabase/storage-js", "npm:2.105.1"],\
+          ["@supabase/supabase-js", "npm:2.105.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1763,6 +1841,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@types-use-sync-external-store-npm-0.0.6-9e5c635381-10c0.zip/node_modules/@types/use-sync-external-store/",\
         "packageDependencies": [\
           ["@types/use-sync-external-store", "npm:0.0.6"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/ws", [\
+      ["npm:8.18.1", {\
+        "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/@types-ws-npm-8.18.1-61dc106ff0-10c0.zip/node_modules/@types/ws/",\
+        "packageDependencies": [\
+          ["@types/node", "npm:25.6.0"],\
+          ["@types/ws", "npm:8.18.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -2846,6 +2934,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["iceberg-js", [\
+      ["npm:0.8.1", {\
+        "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/iceberg-js-npm-0.8.1-8eb1cb03e9-10c0.zip/node_modules/iceberg-js/",\
+        "packageDependencies": [\
+          ["iceberg-js", "npm:0.8.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["iconv-lite", [\
       ["npm:0.4.24", {\
         "packageLocation": "../../../../AppData/Local/Yarn/Berry/cache/iconv-lite-npm-0.4.24-c5c4ac6695-10c0.zip/node_modules/iconv-lite/",\
@@ -3580,6 +3677,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@google/genai", "virtual:d512814f288423f796435fbfdec5bd72ba9c19d88de716005caf5c2f1407913db46dd3166ebdc0f25a4a6d880cd575de6d136884f2f0c4076bd199300af9b672#npm:1.51.0"],\
+          ["@supabase/supabase-js", "npm:2.105.1"],\
           ["@tailwindcss/vite", "virtual:d512814f288423f796435fbfdec5bd72ba9c19d88de716005caf5c2f1407913db46dd3166ebdc0f25a4a6d880cd575de6d136884f2f0c4076bd199300af9b672#npm:4.2.4"],\
           ["@types/express", "npm:4.17.25"],\
           ["@types/node", "npm:22.19.17"],\
@@ -4271,14 +4369,14 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:7d4aeab221a3278b2429280db48babb12944e108da46333824fc8699825d0ec749b0ad960e7dc27c80d6820360f931d9e1244d9fdf55d3eabd35804f95a2f25c#npm:8.20.0", {\
-        "packageLocation": "./.yarn/__virtual__/ws-virtual-9aef89bd61/5/AppData/Local/Yarn/Berry/cache/ws-npm-8.20.0-b8684d1fe3-10c0.zip/node_modules/ws/",\
+      ["virtual:9c639ac2ee673bc23b8267a7175e5aa7148d65f86dad5b360291211e2bb3f0257ddf7c7eaa660d754d62abc04b1223791e5b6467f16153c7921f275b48aa409b#npm:8.20.0", {\
+        "packageLocation": "./.yarn/__virtual__/ws-virtual-43faa7a7ad/5/AppData/Local/Yarn/Berry/cache/ws-npm-8.20.0-b8684d1fe3-10c0.zip/node_modules/ws/",\
         "packageDependencies": [\
           ["@types/bufferutil", null],\
           ["@types/utf-8-validate", null],\
           ["bufferutil", null],\
           ["utf-8-validate", null],\
-          ["ws", "virtual:7d4aeab221a3278b2429280db48babb12944e108da46333824fc8699825d0ec749b0ad960e7dc27c80d6820360f931d9e1244d9fdf55d3eabd35804f95a2f25c#npm:8.20.0"]\
+          ["ws", "virtual:9c639ac2ee673bc23b8267a7175e5aa7148d65f86dad5b360291211e2bb3f0257ddf7c7eaa660d754d62abc04b1223791e5b6467f16153c7921f275b48aa409b#npm:8.20.0"]\
         ],\
         "packagePeers": [\
           "@types/bufferutil",\

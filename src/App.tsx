@@ -38,10 +38,6 @@ export default function App() {
   }, [searchQuery]);
 
   useEffect(() => {
-    console.log('Filtros actualizados:', filters);
-  }, [filters]);
-
-  useEffect(() => {
     console.log('Pestaña activa:', activeTab);
   }, [activeTab]);
 
