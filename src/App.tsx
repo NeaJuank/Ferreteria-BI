@@ -30,7 +30,6 @@ export default function App() {
   const [isExporting, setIsExporting] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
   
-  // Estados para datos de Supabase
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [vendorOptions, setVendorOptions] = useState<string[]>([]);
   const [cityOptions, setCityOptions] = useState<string[]>([]);
@@ -53,7 +52,6 @@ export default function App() {
           fetchCities(),
           fetchCategories(),
         ]);
-
         setVendorOptions(vendors);
         setCityOptions(cities);
         setCategoryOptions(categoriesList);
@@ -61,7 +59,6 @@ export default function App() {
         console.error('Error loading filter options:', err);
       }
     };
-
     loadOptions();
   }, []);
 
@@ -70,7 +67,6 @@ export default function App() {
       try {
         setLoading(true);
         setError(null);
-
         const txns = await fetchTransactions(filters);
         setTransactions(txns);
       } catch (err) {
@@ -80,11 +76,9 @@ export default function App() {
         setLoading(false);
       }
     };
-
     loadData();
   }, [filters]);
 
-  // Lógica de filtrado sobre datos reales
   const filteredTransactions = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
@@ -106,7 +100,27 @@ export default function App() {
         filters.categoria === 'Todas las Categorías' ||
         t.categoria === filters.categoria;
 
-      return matchSearch && matchVendedor && matchCiudad && matchCategoria;
+      // Filtro de periodo sobre la fecha de la transacción
+      let matchPeriodo = true;
+      if (filters.periodo && filters.periodo !== 'Todo el Tiempo') {
+        const date = new Date(t.date);
+        const year = date.getFullYear();
+        const month = date.getMonth();
+
+        if (filters.periodo === 'Año 2024') {
+          matchPeriodo = year === 2024;
+        } else if (filters.periodo === 'Año 2023') {
+          matchPeriodo = year === 2023;
+        } else if (filters.periodo === 'Año 2022') {
+          matchPeriodo = year === 2022;
+        } else if (filters.periodo === 'Último Semestre 2024') {
+          matchPeriodo = year === 2024 && month >= 6;
+        } else if (filters.periodo === 'Primer Semestre 2024') {
+          matchPeriodo = year === 2024 && month < 6;
+        }
+      }
+
+      return matchSearch && matchVendedor && matchCiudad && matchCategoria && matchPeriodo;
     });
   }, [searchQuery, filters, transactions]);
 
@@ -198,11 +212,8 @@ export default function App() {
   ];
 
   const handleExport = () => {
-    console.log('Inicio de exportación de reporte');
     setIsExporting(true);
-    console.log('Procesando exportación...');
     setTimeout(() => {
-      console.log('Exportación completada');
       setIsExporting(false);
       setShowToast('Reporte exportado con éxito (Simulado)');
       setTimeout(() => setShowToast(null), 3000);
@@ -260,7 +271,6 @@ export default function App() {
 
     return (
       <div className="space-y-6">
-        {/* KPI Cards Grid */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -284,7 +294,6 @@ export default function App() {
           ))}
         </motion.div>
 
-        {/* Main Visualizations */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <motion.div transition={{ delay: 0.4 }} className="xl:col-span-1">
             <ZoneSales data={zoneSales} />
@@ -294,7 +303,6 @@ export default function App() {
           </motion.div>
         </div>
 
-        {/* Table & Side Component */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 pb-12">
           <motion.div transition={{ delay: 0.6 }} className="xl:col-span-1">
             <CategoryChart data={categoryDistribution.length > 0 ? categoryDistribution : []} />
@@ -309,7 +317,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
-      {/* Toast Notification */}
       <AnimatePresence>
         {showToast && (
           <motion.div
@@ -350,11 +357,21 @@ export default function App() {
         />
 
         <div className="p-6 space-y-6 max-w-7xl mx-auto w-full">
-          {/* Dashboard Header & Filters */}
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center bg-white p-4 rounded-xl shadow-soft border border-slate-100">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-auto">
               {[
-                { id: 'periodo', label: 'Periodo', options: ['Todo el Tiempo', 'Este Mes', 'Último Trimestre', 'Año Actual'] },
+                { 
+                  id: 'periodo', 
+                  label: 'Periodo', 
+                  options: [
+                    'Todo el Tiempo',
+                    'Año 2024',
+                    'Primer Semestre 2024',
+                    'Último Semestre 2024',
+                    'Año 2023',
+                    'Año 2022',
+                  ] 
+                },
                 { id: 'vendedor', label: 'Vendedor', options: ['Todos los Vendedores', ...vendorOptions] },
                 { id: 'ciudad', label: 'Ciudad', options: ['Todas las Ciudades', ...cityOptions] },
                 { id: 'categoria', label: 'Categoría', options: ['Todas las Categorías', ...categoryOptions] },
@@ -385,7 +402,6 @@ export default function App() {
         </div>
       </main>
 
-      {/* Mobile Bottom Navigation */}
       <nav className="lg:hidden fixed bottom-6 left-6 right-6 bg-white border border-slate-200 h-16 flex items-center justify-around z-50 px-4 rounded-2xl shadow-xl backdrop-blur-xl bg-white/90">
         {[
           { icon: LayoutDashboard, label: 'Dashboard' },
@@ -408,7 +424,4 @@ export default function App() {
       </nav>
     </div>
   );
-
-  
 }
-
