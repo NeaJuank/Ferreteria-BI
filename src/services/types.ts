@@ -9,6 +9,7 @@ export interface Transaction {
   initials: string;
   ciudad?: string;
   zona?: string;
+  metodo_pago?: string;
   categoria?: string;
 }
 
@@ -37,15 +38,20 @@ export interface ZoneData {
   percentage: number;
 }
 
+export interface PaymentData {
+  name: string;
+  value: number;
+  color: string;
+}
+
+export interface ProductData {
+  name: string;
+  value: number;
+}
+
 export interface DashboardFilters {
   vendedor?: string;
   ciudad?: string;
   categoria?: string;
   periodo?: string;
-}
-
-export interface ZoneData {
-  zone: string;
-  totalSales: number;
-  percentage: number;
 }

@@ -1,14 +1,14 @@
-import React from 'react';
-import { 
-  LayoutDashboard, 
-  TrendingUp, 
-  BarChart3, 
-  Package, 
-  Users, 
-  HelpCircle, 
-  LogOut, 
-  Search, 
-  Bell, 
+import React from "react";
+import {
+  LayoutDashboard,
+  TrendingUp,
+  BarChart3,
+  Package,
+  Users,
+  HelpCircle,
+  LogOut,
+  Search,
+  Bell,
   Settings,
   Download,
   Filter,
@@ -17,54 +17,48 @@ import {
   ChevronRight,
   Eye,
   Menu,
-  X
-} from 'lucide-react';
-import { cn } from '../lib/utils';
-import { motion, AnimatePresence } from 'motion/react';
-import { ZoneData } from '../services/types';
+  X,
+} from "lucide-react";
+import { cn } from "../lib/utils";
+import { motion, AnimatePresence } from "motion/react";
+import { ZoneData } from "../services/types";
 
 // --- Sidebar ---
-export function Sidebar({ 
-  className, 
-  isOpen, 
+export function Sidebar({
+  className,
+  isOpen,
   setMobileOpen,
   activeTab,
-  onTabChange
-}: { 
-  className?: string; 
-  isOpen?: boolean; 
+  onTabChange,
+}: {
+  className?: string;
+  isOpen?: boolean;
   setMobileOpen?: (v: boolean) => void;
   activeTab: string;
   onTabChange: (tab: string) => void;
 }) {
-  const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard' },
-    { icon: TrendingUp, label: 'Ventas' },
-    { icon: BarChart3, label: 'Reportes' },
-    { icon: Package, label: 'Inventario' },
-    { icon: Users, label: 'Clientes' },
-  ];
-
-  const handleLogout = () => {
-    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-      window.location.reload();
-    }
-  };
+  const navItems = [{ icon: LayoutDashboard, label: "Dashboard" }];
 
   return (
-    <aside className={cn(
-      "flex flex-col h-screen fixed left-0 top-0 z-50 w-[240px] bg-white border-r border-slate-200 transition-transform duration-300",
-      isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-      className
-    )}>
+    <aside
+      className={cn(
+        "flex flex-col h-screen fixed left-0 top-0 z-50 w-[240px] bg-white border-r border-slate-200 transition-transform duration-300",
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+        className,
+      )}
+    >
       <div className="px-6 py-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
-            <BarChart3 className="text-white w-5 h-5" />
+            <LayoutDashboard className="text-white w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-lg font-black tracking-tight text-primary leading-tight">Corporativo</h1>
-            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Análisis Global</p>
+            <h1 className="text-lg font-black tracking-tight text-primary leading-tight">
+              Ferreteria
+            </h1>
+            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
+              DiazCorp
+            </p>
           </div>
         </div>
         <button className="lg:hidden" onClick={() => setMobileOpen?.(false)}>
@@ -82,46 +76,64 @@ export function Sidebar({
             }}
             className={cn(
               "w-full flex items-center px-4 py-3 rounded-lg transition-all text-sm font-medium",
-              activeTab === item.label 
-                ? "text-primary bg-slate-50 border-r-4 border-primary font-bold shadow-sm" 
-                : "text-slate-600 hover:bg-slate-100"
+              activeTab === item.label
+                ? "text-primary bg-slate-50 border-r-4 border-primary font-bold shadow-sm"
+                : "text-slate-600 hover:bg-slate-100",
             )}
           >
-            <item.icon className={cn("mr-3 w-5 h-5", activeTab === item.label ? "text-primary" : "text-slate-400")} />
+            <item.icon
+              className={cn(
+                "mr-3 w-5 h-5",
+                activeTab === item.label ? "text-primary" : "text-slate-400",
+              )}
+            />
             {item.label}
           </button>
         ))}
       </nav>
 
-      <div className="p-4 border-t border-slate-100 space-y-1">
-        <button onClick={() => alert('Centro de Ayuda pronto disponible.')} className="w-full flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg transition-all text-sm">
-          <HelpCircle className="mr-3 w-5 h-5 text-slate-400" />
-          Ayuda
-        </button>
-        <button onClick={handleLogout} className="w-full flex items-center px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-all text-sm">
-          <LogOut className="mr-3 w-5 h-5 text-red-400" />
-          Cerrar Sesión
-        </button>
+      <div className="p-6 border-t border-slate-50 text-center">
+        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">
+          Versión 1.0.4 - BI
+        </p>
       </div>
     </aside>
   );
 }
 
 // --- Header ---
-export function Header({ 
-  onMenuClick, 
-  onSearch 
-}: { 
-  onMenuClick: () => void; 
+export function Header({
+  onMenuClick,
+  onSearch,
+}: {
+  onMenuClick: () => void;
   onSearch: (q: string) => void;
 }) {
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showSettings, setShowSettings] = React.useState(false);
 
   const notifications = [
-    { id: 1, title: 'Venta completada', desc: 'Factura #INV-8902 procesada', time: 'hace 5 min', type: 'success' },
-    { id: 2, title: 'Bajo stock', desc: 'Kit de herramientas pro nivel crítico', time: 'hace 1h', type: 'warning' },
-    { id: 3, title: 'Nuevo cliente', desc: 'Juan Pérez se ha registrado', time: 'hace 3h', type: 'info' },
+    {
+      id: 1,
+      title: "Venta completada",
+      desc: "Factura #INV-8902 procesada",
+      time: "hace 5 min",
+      type: "success",
+    },
+    {
+      id: 2,
+      title: "Bajo stock",
+      desc: "Kit de herramientas pro nivel crítico",
+      time: "hace 1h",
+      type: "warning",
+    },
+    {
+      id: 3,
+      title: "Nuevo cliente",
+      desc: "Juan Pérez se ha registrado",
+      time: "hace 3h",
+      type: "info",
+    },
   ];
 
   return (
@@ -132,8 +144,8 @@ export function Header({
         </button>
         <div className="relative w-full max-w-md hidden md:block">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-          <input 
-            type="text" 
+          <input
+            type="text"
             onChange={(e) => onSearch(e.target.value)}
             placeholder="Buscar transacciones, vendedores o productos..."
             className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
@@ -144,43 +156,65 @@ export function Header({
       <div className="flex items-center gap-2 md:gap-4">
         {/* Notifications Dropdown */}
         <div className="relative">
-          <button 
+          <button
             onClick={() => setShowNotifications(!showNotifications)}
             className={cn(
               "p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative",
-              showNotifications && "bg-slate-100 text-primary"
+              showNotifications && "bg-slate-100 text-primary",
             )}
           >
             <Bell className="w-5 h-5" />
             <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
-          
+
           <AnimatePresence>
             {showNotifications && (
               <>
-                <div className="fixed inset-0 z-10" onClick={() => setShowNotifications(false)} />
-                <motion.div 
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setShowNotifications(false)}
+                />
+                <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   className="absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-medium border border-slate-100 z-20 overflow-hidden"
                 >
                   <div className="p-4 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
-                    <span className="font-bold text-sm text-primary">Notificaciones</span>
-                    <button className="text-[10px] text-blue-600 font-bold hover:underline">Marcar leídas</button>
+                    <span className="font-bold text-sm text-primary">
+                      Notificaciones
+                    </span>
+                    <button className="text-[10px] text-blue-600 font-bold hover:underline">
+                      Marcar leídas
+                    </button>
                   </div>
                   <div className="max-h-[320px] overflow-y-auto scrollbar-hide">
                     {notifications.map((n) => (
-                      <div key={n.id} className="p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors cursor-pointer last:border-0">
+                      <div
+                        key={n.id}
+                        className="p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors cursor-pointer last:border-0"
+                      >
                         <div className="flex gap-3">
-                          <div className={cn(
-                            "w-2 h-2 mt-1.5 rounded-full shrink-0",
-                            n.type === 'success' ? 'bg-teal-500' : n.type === 'warning' ? 'bg-orange-500' : 'bg-blue-500'
-                          )} />
+                          <div
+                            className={cn(
+                              "w-2 h-2 mt-1.5 rounded-full shrink-0",
+                              n.type === "success"
+                                ? "bg-teal-500"
+                                : n.type === "warning"
+                                  ? "bg-orange-500"
+                                  : "bg-blue-500",
+                            )}
+                          />
                           <div>
-                            <p className="text-xs font-bold text-slate-800">{n.title}</p>
-                            <p className="text-[11px] text-slate-500 mb-1">{n.desc}</p>
-                            <span className="text-[9px] text-slate-400 font-medium uppercase tracking-wider">{n.time}</span>
+                            <p className="text-xs font-bold text-slate-800">
+                              {n.title}
+                            </p>
+                            <p className="text-[11px] text-slate-500 mb-1">
+                              {n.desc}
+                            </p>
+                            <span className="text-[9px] text-slate-400 font-medium uppercase tracking-wider">
+                              {n.time}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -196,7 +230,7 @@ export function Header({
         </div>
 
         {/* Settings Button */}
-        <button 
+        <button
           onClick={() => setShowSettings(true)}
           className="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors"
         >
@@ -206,13 +240,17 @@ export function Header({
         <div className="h-8 w-[1px] bg-slate-200 mx-2"></div>
         <div className="flex items-center gap-3 cursor-pointer group">
           <div className="text-right hidden sm:block">
-            <p className="text-sm font-bold leading-none text-primary">Admin User</p>
-            <p className="text-[10px] text-slate-500 font-medium capitalize">Director Comercial</p>
+            <p className="text-sm font-bold leading-none text-primary">
+              Admin User
+            </p>
+            <p className="text-[10px] text-slate-500 font-medium capitalize">
+              Director Comercial
+            </p>
           </div>
           <div className="w-9 h-9 rounded-full border border-slate-200 overflow-hidden group-hover:border-primary transition-all group-hover:scale-105 shadow-sm">
-             <img 
-              src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=100&auto=format&fit=crop" 
-              alt="User" 
+            <img
+              src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=100&auto=format&fit=crop"
+              alt="User"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
@@ -224,50 +262,76 @@ export function Header({
       <AnimatePresence>
         {showSettings && (
           <>
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50"
               onClick={() => setShowSettings(false)}
             />
-            <motion.div 
-              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
               className="fixed right-0 top-0 h-screen w-80 bg-white z-[60] shadow-2xl p-6 flex flex-col"
             >
               <div className="flex justify-between items-center mb-8">
-                <h2 className="text-xl font-bold text-primary">Configuración</h2>
-                <button onClick={() => setShowSettings(false)} className="p-2 hover:bg-slate-100 rounded-full">
+                <h2 className="text-xl font-bold text-primary">
+                  Configuración
+                </h2>
+                <button
+                  onClick={() => setShowSettings(false)}
+                  className="p-2 hover:bg-slate-100 rounded-full"
+                >
                   <X className="w-5 h-5 text-slate-400" />
                 </button>
               </div>
 
               <div className="space-y-8 flex-1">
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">Apariencia</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">
+                    Apariencia
+                  </label>
                   <div className="grid grid-cols-2 gap-3">
                     <button className="p-4 rounded-xl border-2 border-primary bg-slate-50 flex flex-col items-center gap-2">
-                       <div className="w-full h-12 bg-white border border-slate-200 rounded-md" />
-                       <span className="text-xs font-bold text-primary">Claro</span>
+                      <div className="w-full h-12 bg-white border border-slate-200 rounded-md" />
+                      <span className="text-xs font-bold text-primary">
+                        Claro
+                      </span>
                     </button>
-                    <button onClick={() => alert('Modo oscuro disponible próximamente')} className="p-4 rounded-xl border-2 border-slate-100 hover:border-slate-200 bg-slate-900 flex flex-col items-center gap-2">
-                       <div className="w-full h-12 bg-slate-800 border border-slate-700 rounded-md" />
-                       <span className="text-xs font-bold text-slate-400">Oscuro</span>
+                    <button
+                      onClick={() =>
+                        alert("Modo oscuro disponible próximamente")
+                      }
+                      className="p-4 rounded-xl border-2 border-slate-100 hover:border-slate-200 bg-slate-900 flex flex-col items-center gap-2"
+                    >
+                      <div className="w-full h-12 bg-slate-800 border border-slate-700 rounded-md" />
+                      <span className="text-xs font-bold text-slate-400">
+                        Oscuro
+                      </span>
                     </button>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Cuenta</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
+                    Cuenta
+                  </label>
                   <button className="w-full flex items-center justify-between p-3 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
                     <div className="flex items-center gap-3">
                       <Users className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm font-medium text-slate-700">Perfil de Usuario</span>
+                      <span className="text-sm font-medium text-slate-700">
+                        Perfil de Usuario
+                      </span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-slate-300" />
                   </button>
                   <button className="w-full flex items-center justify-between p-3 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
                     <div className="flex items-center gap-3">
                       <Bell className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm font-medium text-slate-700">Notificaciones</span>
+                      <span className="text-sm font-medium text-slate-700">
+                        Notificaciones
+                      </span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-slate-300" />
                   </button>
@@ -275,9 +339,9 @@ export function Header({
               </div>
 
               <div className="pt-6 border-t border-slate-100">
-                <button 
+                <button
                   onClick={() => {
-                    alert('Preferencias guardadas');
+                    alert("Preferencias guardadas");
                     setShowSettings(false);
                   }}
                   className="w-full py-4 bg-primary text-white font-bold rounded-xl text-sm shadow-md hover:shadow-lg transition-all"
@@ -294,23 +358,48 @@ export function Header({
 }
 
 // --- KPI Card ---
-export function KPICard({ label, value, trend, icon: Icon, colorClass }: { label: string; value: string; trend: number; icon: any; colorClass?: string }) {
+export function KPICard({
+  label,
+  value,
+  trend,
+  icon: Icon,
+  colorClass,
+}: {
+  label: string;
+  value: string;
+  trend: number;
+  icon: any;
+  colorClass?: string;
+}) {
   const isPositive = trend > 0;
   return (
     <div className="bg-white p-5 rounded-xl shadow-soft border border-slate-100 hover:shadow-medium transition-shadow cursor-default">
       <div className="flex justify-between items-start mb-4">
-        <div className={cn("p-2 rounded-lg", colorClass || "bg-blue-50 text-primary")}>
+        <div
+          className={cn(
+            "p-2 rounded-lg",
+            colorClass || "bg-blue-50 text-primary",
+          )}
+        >
           <Icon className="w-5 h-5" />
         </div>
-        <span className={cn(
-          "flex items-center gap-1 font-bold text-xs px-2 py-1 rounded-full",
-          isPositive ? "text-teal-600 bg-teal-50" : "text-red-500 bg-red-50"
-        )}>
-          {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingUp className="w-3 h-3 rotate-180" />}
+        <span
+          className={cn(
+            "flex items-center gap-1 font-bold text-xs px-2 py-1 rounded-full",
+            isPositive ? "text-teal-600 bg-teal-50" : "text-red-500 bg-red-50",
+          )}
+        >
+          {isPositive ? (
+            <TrendingUp className="w-3 h-3" />
+          ) : (
+            <TrendingUp className="w-3 h-3 rotate-180" />
+          )}
           {Math.abs(trend)}%
         </span>
       </div>
-      <p className="text-slate-500 text-xs font-medium mb-1 uppercase tracking-wider">{label}</p>
+      <p className="text-slate-500 text-xs font-medium mb-1 uppercase tracking-wider">
+        {label}
+      </p>
       <h2 className="text-2xl font-bold text-primary">{value}</h2>
     </div>
   );
@@ -321,31 +410,56 @@ export function ZoneSales({ data }: { data: ZoneData[] }) {
   const totalSales = data.reduce((sum, zone) => sum + zone.totalSales, 0);
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-soft border border-slate-100">
+    <div className="bg-white p-6 rounded-2xl shadow-soft border border-slate-100 h-[400px] flex flex-col">
       <div className="flex items-center justify-between mb-8">
         <h3 className="font-bold text-lg text-primary">Ventas por Zona</h3>
-        <button className="text-slate-400 hover:text-slate-600"><MoreVertical className="w-5 h-5" /></button>
+        <button className="text-slate-400 hover:text-slate-600 transition-colors">
+          <MoreVertical className="w-5 h-5" />
+        </button>
       </div>
-      <div className="space-y-6">
-        {data.length > 0 ? data.map((zone) => (
-          <div key={zone.zone}>
-            <div className="flex justify-between text-sm mb-2">
-              <span className="font-medium text-slate-600">{zone.zone}</span>
-              <span className="font-bold text-primary">${zone.totalSales.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span>
+      <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-hide">
+        {data.length > 0 ? (
+          data.map((zone) => (
+            <div key={zone.zone} className="group">
+              <div className="flex justify-between text-xs mb-2">
+                <span className="font-bold text-slate-500 uppercase tracking-wider group-hover:text-primary transition-colors">
+                  {zone.zone}
+                </span>
+                <span className="font-black text-primary">
+                  $
+                  {zone.totalSales.toLocaleString("es-CO", {
+                    maximumFractionDigits: 0,
+                  })}
+                </span>
+              </div>
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden shadow-inner">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${zone.percentage}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className={cn(
+                    "h-full rounded-full bg-gradient-to-r from-primary to-primary-light",
+                  )}
+                />
+              </div>
             </div>
-            <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-              <div 
-                className={cn("h-full rounded-full bg-primary")}
-                style={{ width: `${zone.percentage}%` }}
-              />
-            </div>
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full text-slate-400 opacity-50">
+            <TrendingUp className="w-12 h-12 mb-2" />
+            <p className="text-sm font-medium">No hay datos de zona</p>
           </div>
-        )) : (
-          <div className="text-slate-500 text-sm">No hay datos de zona disponibles.</div>
         )}
       </div>
       {totalSales > 0 && (
-        <div className="mt-6 text-xs text-slate-500">Total por zona: ${totalSales.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</div>
+        <div className="mt-6 pt-4 border-t border-slate-50 flex justify-between items-center">
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+            Total Acumulado
+          </span>
+          <span className="text-sm font-black text-primary">
+            ${totalSales.toLocaleString("es-CO", { maximumFractionDigits: 0 })}
+          </span>
+        </div>
       )}
     </div>
   );

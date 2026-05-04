@@ -58,7 +58,8 @@ export async function fetchTransactions(filters?: DashboardFilters): Promise<Tra
         dim_vendedor!vendedor_id (nombre),
         dim_producto!producto_id (nombre, categoria),
         dim_segmento_venta!segmento_venta_id (ciudad, zona),
-        dim_tiempo!tiempo_id (fecha)
+        dim_tiempo!tiempo_id (fecha),
+        dim_metodo_pago!metodo_pago_id (metodo)
       `)
       .order('id', { ascending: false })
       .limit(1000);
@@ -88,6 +89,7 @@ export async function fetchTransactions(filters?: DashboardFilters): Promise<Tra
       ciudad: row.dim_segmento_venta?.ciudad || undefined,
       zona: row.dim_segmento_venta?.zona || undefined,
       categoria: row.dim_producto?.categoria || undefined,
+      metodo_pago: row.dim_metodo_pago?.metodo || undefined,
     }));
 
     return transactions;
