@@ -40,11 +40,16 @@ export function MonthlySalesChart({ data }: { data: MonthlyData[] }) {
         </div>
       </div>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+        <BarChart 
+          data={data} 
+          margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
+          barGap={2}
+          barCategoryGap={15}
+        >
           <defs>
             <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#000666" stopOpacity={1}/>
-              <stop offset="95%" stopColor="#1a237e" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#000666" stopOpacity={0.8}/>
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -52,20 +57,37 @@ export function MonthlySalesChart({ data }: { data: MonthlyData[] }) {
             dataKey="month" 
             axisLine={false} 
             tickLine={false} 
-            tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
+            tick={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }}
             dy={10}
+            interval="preserveStartEnd"
+            minTickGap={30}
+            angle={-25}
+            textAnchor="end"
           />
           <YAxis 
             axisLine={false} 
             tickLine={false} 
-            tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
+            tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }}
+            tickFormatter={(value) => `$${(value / 1000000).toFixed(1)}M`}
           />
           <Tooltip 
             cursor={{ fill: '#f8fafc' }}
-            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+            contentStyle={{ 
+              borderRadius: '16px', 
+              border: 'none', 
+              boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+              padding: '12px'
+            }}
+            formatter={(value: number) => [`$${value.toLocaleString('es-CO')}`, 'Monto']}
           />
-          <Bar dataKey="sales" fill="url(#colorSales)" radius={[6, 6, 0, 0]} barSize={32} />
-          <Bar dataKey="objective" fill="#f59e0b" radius={[6, 6, 0, 0]} barSize={32} />
+          <Legend 
+            verticalAlign="top" 
+            align="right" 
+            iconType="circle"
+            wrapperStyle={{ paddingBottom: '20px', fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase' }}
+          />
+          <Bar name="Ventas Reales" dataKey="sales" fill="url(#colorSales)" radius={[4, 4, 0, 0]} barSize={16} />
+          <Bar name="Objetivo (Meta)" dataKey="objective" fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={16} />
         </BarChart>
       </ResponsiveContainer>
     </ChartWrapper>

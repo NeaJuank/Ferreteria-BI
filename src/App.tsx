@@ -205,7 +205,7 @@ export default function App() {
         return {
           year,
           monthIndex: month,
-          month: monthNames[month - 1] || "Desconocido",
+          month: `${monthNames[month - 1] || "Desconocido"} '${year.toString().slice(-2)}`,
           sales: Number(sales.toFixed(2)),
           objective: Number((sales * 1.1).toFixed(2)),
         } as MonthlyData & { year: number; monthIndex: number };
