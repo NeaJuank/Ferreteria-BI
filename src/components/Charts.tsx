@@ -51,6 +51,7 @@ export function MonthlySalesChart({ data }: { data: MonthlyData[] }) {
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
             />
             <Bar dataKey="sales" fill="#000666" radius={[4, 4, 0, 0]} barSize={24} />
+            <Bar dataKey="objective" fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={24} />
           </BarChart>
         </ResponsiveContainer>
       </div>

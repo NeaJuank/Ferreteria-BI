@@ -13,19 +13,24 @@ const applyFilters = (query: any, filters?: DashboardFilters) => {
   if (filters.categoria && filters.categoria !== 'Todas las Categorías') {
     query = query.eq('dim_producto.categoria', filters.categoria);
   }
-  if (filters.periodo && filters.periodo !== 'Este Mes') {
+  if (filters.periodo && filters.periodo !== 'Todo el Tiempo') {
     const today = new Date();
     let startDate: string | null = null;
+    const endDate: string = today.toISOString().split('T')[0];
 
-    if (filters.periodo === 'Último Trimestre') {
+    if (filters.periodo === 'Este Mes') {
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+      startDate = firstDay.toISOString().split('T')[0];
+    } else if (filters.periodo === 'Último Trimestre') {
       const past = new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
       startDate = past.toISOString().split('T')[0];
-    } else if (filters.periodo === 'Año 2023') {
-      startDate = '2023-01-01';
+    } else if (filters.periodo === 'Año Actual') {
+      const firstDay = new Date(today.getFullYear(), 0, 1);
+      startDate = firstDay.toISOString().split('T')[0];
     }
 
     if (startDate) {
-      query = query.gte('dim_tiempo.fecha', startDate);
+      query = query.gte('dim_tiempo.fecha', startDate).lte('dim_tiempo.fecha', endDate);
     }
   }
 
@@ -50,13 +55,13 @@ export async function fetchTransactions(filters?: DashboardFilters): Promise<Tra
         cantidad,
         valor_unitario,
         valor_total,
-        dim_vendedor (nombre),
-        dim_producto (nombre, categoria),
-        dim_segmento_venta (ciudad, zona),
-        dim_tiempo (fecha)
+        dim_vendedor!vendedor_id (nombre),
+        dim_producto!producto_id (nombre, categoria),
+        dim_segmento_venta!segmento_venta_id (ciudad, zona),
+        dim_tiempo!tiempo_id (fecha)
       `)
-      .order('dim_tiempo.fecha', { ascending: false })
-      .limit(500);
+      .order('id', { ascending: false })
+      .limit(1000);
 
     query = applyFilters(query, filters);
 
@@ -106,13 +111,11 @@ export async function fetchMonthlySales(filters?: DashboardFilters): Promise<Mon
       .from('fact_ventas')
       .select(`
         valor_total,
-        dim_tiempo (mes, ano, fecha),
-        dim_vendedor (nombre),
-        dim_segmento_venta (ciudad),
-        dim_producto (categoria)
-      `)
-      .order('dim_tiempo.ano', { ascending: false })
-      .order('dim_tiempo.mes', { ascending: false });
+        dim_tiempo!tiempo_id (mes, ano, fecha),
+        dim_vendedor!vendedor_id (nombre),
+        dim_segmento_venta!segmento_venta_id (ciudad),
+        dim_producto!producto_id (categoria)
+      `);
 
     query = applyFilters(query, filters);
 
@@ -135,15 +138,20 @@ export async function fetchMonthlySales(filters?: DashboardFilters): Promise<Mon
 
     const monthlySales: MonthlyData[] = Array.from(monthMap.entries())
       .map(([key, total]) => {
-        const [month] = key.split('-');
-        const monthName = monthNames[parseInt(month, 10) - 1] || 'Desconocido';
+        const [month, year] = key.split('-');
+        const monthIndex = parseInt(month, 10) - 1;
+        const monthName = monthNames[monthIndex] || 'Desconocido';
         return {
           month: monthName,
           sales: total,
           objective: total * 1.1,
-        };
+          year: parseInt(year, 10),
+          monthIndex,
+        } as MonthlyData & { year: number; monthIndex: number };
       })
-      .slice(0, 12);
+      .sort((a, b) => a.year - b.year || a.monthIndex - b.monthIndex)
+      .map(({ year, monthIndex, ...rest }) => rest)
+      .slice(-12);
 
     return monthlySales;
   } catch (err) {
@@ -166,7 +174,10 @@ export async function fetchCategoryDistribution(filters?: DashboardFilters): Pro
       .from('fact_ventas')
       .select(`
         valor_total,
-        dim_producto (categoria)
+        dim_producto!producto_id (categoria),
+        dim_vendedor!vendedor_id (nombre),
+        dim_segmento_venta!segmento_venta_id (ciudad),
+        dim_tiempo!tiempo_id (fecha)
       `);
 
     query = applyFilters(query, filters);
@@ -291,10 +302,10 @@ export async function fetchKPIs(filters?: DashboardFilters) {
         valor_total,
         cantidad,
         factura,
-        dim_vendedor (nombre),
-        dim_segmento_venta (ciudad),
-        dim_producto (categoria),
-        dim_tiempo (fecha)
+        dim_vendedor!vendedor_id (nombre),
+        dim_segmento_venta!segmento_venta_id (ciudad),
+        dim_producto!producto_id (categoria),
+        dim_tiempo!tiempo_id (fecha)
       `);
 
     query = applyFilters(query, filters);
@@ -333,7 +344,13 @@ export async function fetchZoneSales(filters?: DashboardFilters): Promise<ZoneDa
   try {
     let query = supabase
       .from('fact_ventas')
-      .select('valor_total, dim_segmento_venta (zona)');
+      .select(`
+        valor_total,
+        dim_segmento_venta!segmento_venta_id (zona, ciudad),
+        dim_vendedor!vendedor_id (nombre),
+        dim_producto!producto_id (categoria),
+        dim_tiempo!tiempo_id (fecha)
+      `);
 
     query = applyFilters(query, filters);
 
@@ -346,7 +363,7 @@ export async function fetchZoneSales(filters?: DashboardFilters): Promise<ZoneDa
 
     const zoneMap = new Map<string, number>();
     (data || []).forEach((row: any) => {
-      const zone = row.dim_segmento_venta?.zona || 'Sin Zona';
+      const zone = row.dim_segmento_venta?.zona || row.dim_segmento_venta?.ciudad || 'Sin Zona';
       const current = zoneMap.get(zone) || 0;
       zoneMap.set(zone, current + parseFloat(row.valor_total || 0));
     });

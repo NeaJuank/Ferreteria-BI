@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
-import { fetchTransactions, fetchMonthlySales, fetchCategoryDistribution, fetchKPIs, fetchZoneSales, fetchVendors, fetchCities, fetchCategories } from './services/supabaseService';
+import { fetchTransactions, fetchVendors, fetchCities, fetchCategories } from './services/supabaseService';
 import { Transaction, MonthlyData, CategoryData, ZoneData, DashboardFilters } from './services/types';
 
 export default function App() {
@@ -32,18 +32,14 @@ export default function App() {
   
   // Estados para datos de Supabase
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [monthlySales, setMonthlySales] = useState<MonthlyData[]>([]);
-  const [categoryDistribution, setCategoryDistribution] = useState<CategoryData[]>([]);
-  const [zoneSales, setZoneSales] = useState<ZoneData[]>([]);
   const [vendorOptions, setVendorOptions] = useState<string[]>([]);
   const [cityOptions, setCityOptions] = useState<string[]>([]);
   const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
-  const [kpisData, setKpisData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
   const [filters, setFilters] = useState<DashboardFilters>({
-    periodo: 'Este Mes',
+    periodo: 'Todo el Tiempo',
     vendedor: 'Todos los Vendedores',
     ciudad: 'Todas las Ciudades',
     categoria: 'Todas las Categorías',
@@ -75,19 +71,8 @@ export default function App() {
         setLoading(true);
         setError(null);
 
-        const [txns, sales, categories, zones, kpis] = await Promise.all([
-          fetchTransactions(filters),
-          fetchMonthlySales(filters),
-          fetchCategoryDistribution(filters),
-          fetchZoneSales(filters),
-          fetchKPIs(filters),
-        ]);
-
+        const txns = await fetchTransactions(filters);
         setTransactions(txns);
-        setMonthlySales(sales);
-        setCategoryDistribution(categories);
-        setZoneSales(zones);
-        setKpisData(kpis);
       } catch (err) {
         console.error('❌ Error al cargar datos:', err);
         setError('Error al cargar datos de Supabase');
@@ -125,15 +110,91 @@ export default function App() {
     });
   }, [searchQuery, filters, transactions]);
 
-  const totalSales = kpisData?.totalSales ?? 0;
-  const totalUnits = kpisData?.totalUnits ?? 0;
-  const avgMargin = kpisData ? kpisData.avgMargin.toFixed(2) : '0.00';
+  const totalSales = useMemo(
+    () => filteredTransactions.reduce((sum, row) => sum + row.total, 0),
+    [filteredTransactions]
+  );
+
+  const totalUnits = useMemo(
+    () => filteredTransactions.reduce((sum, row) => sum + row.quantity, 0),
+    [filteredTransactions]
+  );
+
+  const totalClients = useMemo(
+    () => new Set(filteredTransactions.map((row) => row.invoice)).size,
+    [filteredTransactions]
+  );
+
+  const avgMargin = useMemo(
+    () => (filteredTransactions.length > 0 ? totalSales / filteredTransactions.length : 0),
+    [filteredTransactions, totalSales]
+  );
+
+  const monthlySales = useMemo<MonthlyData[]>(() => {
+    const monthMap = new Map<string, number>();
+    const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+    filteredTransactions.forEach((row) => {
+      const date = new Date(row.date);
+      const key = `${date.getFullYear()}-${date.getMonth() + 1}`;
+      const currentSum = monthMap.get(key) || 0;
+      monthMap.set(key, currentSum + row.total);
+    });
+
+    return Array.from(monthMap.entries())
+      .map(([key, sales]) => {
+        const [year, month] = key.split('-').map(Number);
+        return {
+          year,
+          monthIndex: month,
+          month: monthNames[month - 1] || 'Desconocido',
+          sales,
+          objective: sales * 1.1,
+        } as MonthlyData & { year: number; monthIndex: number };
+      })
+      .sort((a, b) => a.year - b.year || a.monthIndex - b.monthIndex)
+      .map(({ year, monthIndex, ...rest }) => rest);
+  }, [filteredTransactions]);
+
+  const categoryDistribution = useMemo<CategoryData[]>(() => {
+    const categoryMap = new Map<string, number>();
+    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+    let colorIndex = 0;
+
+    filteredTransactions.forEach((row) => {
+      const category = row.categoria || 'Otros';
+      categoryMap.set(category, (categoryMap.get(category) || 0) + row.total);
+    });
+
+    return Array.from(categoryMap.entries())
+      .map(([name, value]) => ({
+        name,
+        value: Math.round(value),
+        color: colors[colorIndex++ % colors.length],
+      }))
+      .sort((a, b) => b.value - a.value);
+  }, [filteredTransactions]);
+
+  const zoneSales = useMemo<ZoneData[]>(() => {
+    const zoneMap = new Map<string, number>();
+    filteredTransactions.forEach((row) => {
+      const zone = row.zona || row.ciudad || 'Sin Zona';
+      zoneMap.set(zone, (zoneMap.get(zone) || 0) + row.total);
+    });
+    const total = Array.from(zoneMap.values()).reduce((sum, value) => sum + value, 0);
+
+    return Array.from(zoneMap.entries()).map(([zone, totalSales]) => ({
+      zone,
+      totalSales,
+      percentage: total > 0 ? (totalSales / total) * 100 : 0,
+    }));
+  }, [filteredTransactions]);
 
   const kpis = [
     { label: 'Ventas Totales', value: `$${totalSales.toLocaleString('es-CO', { maximumFractionDigits: 0 })}`, trend: 4.5, icon: DollarSign, color: 'bg-blue-50 text-primary' },
     { label: 'Unidades Vendidas', value: `${totalUnits.toLocaleString()} uds`, trend: 2.1, icon: Package, color: 'bg-indigo-50 text-indigo-700' },
-    { label: 'Ticket Promedio', value: `$${parseFloat(avgMargin).toLocaleString('es-CO', { maximumFractionDigits: 0 })}`, trend: -0.5, icon: TrendingUp, color: 'bg-teal-50 text-teal-700' },
-    { label: 'Clientes Activos', value: kpisData?.totalClients?.toLocaleString() || '0', trend: 4.1, icon: Users, color: 'bg-sky-50 text-sky-700' },
+    { label: 'Ticket Promedio', value: `$${avgMargin.toLocaleString('es-CO', { maximumFractionDigits: 0 })}`, trend: -0.5, icon: TrendingUp, color: 'bg-teal-50 text-teal-700' },
+    { label: 'Clientes Activos', value: `${totalClients}`, trend: 4.1, icon: Users, color: 'bg-sky-50 text-sky-700' },
   ];
 
   const handleExport = () => {
@@ -293,7 +354,7 @@ export default function App() {
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center bg-white p-4 rounded-xl shadow-soft border border-slate-100">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-auto">
               {[
-                { id: 'periodo', label: 'Periodo', options: ['Este Mes', 'Último Trimestre', 'Año 2023'] },
+                { id: 'periodo', label: 'Periodo', options: ['Todo el Tiempo', 'Este Mes', 'Último Trimestre', 'Año Actual'] },
                 { id: 'vendedor', label: 'Vendedor', options: ['Todos los Vendedores', ...vendorOptions] },
                 { id: 'ciudad', label: 'Ciudad', options: ['Todas las Ciudades', ...cityOptions] },
                 { id: 'categoria', label: 'Categoría', options: ['Todas las Categorías', ...categoryOptions] },
