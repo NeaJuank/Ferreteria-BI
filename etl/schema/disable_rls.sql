@@ -1,0 +1,7 @@
+-- Deshabilitar RLS en las tablas de dimensiones para permitir inserciones del ETL
+ALTER TABLE dim_segmento_cliente DISABLE ROW LEVEL SECURITY;
+ALTER TABLE dim_producto DISABLE ROW LEVEL SECURITY;
+ALTER TABLE dim_vendedor DISABLE ROW LEVEL SECURITY;
+ALTER TABLE dim_metodo_pago DISABLE ROW LEVEL SECURITY;
+ALTER TABLE dim_tiempo DISABLE ROW LEVEL SECURITY;
+ALTER TABLE fact_ventas DISABLE ROW LEVEL SECURITY;

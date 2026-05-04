@@ -20,8 +20,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
-import { INITIAL_TRANSACTIONS, MONTHLY_SALES, CATEGORY_DISTRIBUTION } from './services/mockData';
-import { supabase } from './lib/supabaseClient';
+import { fetchTransactions, fetchMonthlySales, fetchCategoryDistribution, fetchKPIs, fetchZoneSales, fetchVendors, fetchCities, fetchCategories } from './services/supabaseService';
+import { Transaction, MonthlyData, CategoryData, ZoneData, DashboardFilters } from './services/types';
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -30,60 +30,111 @@ export default function App() {
   const [isExporting, setIsExporting] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
   
-  useEffect(() => {
-    console.log('Dashboard cargado');
-  }, []);
-
-  useEffect(() => {
-    console.log("Dashboard cargado");
-  }, []);
-
-  useEffect(() => {
-    console.log("supabase");
-    if(supabase) {
-      console.log("supabase client inicializado correctamente");
-    } else {
-      console.error("Error al inicializar supabase client");
-    }
-  }, [searchQuery]);
-
-  useEffect(() => {
-    console.log('Pestaña activa:', activeTab);
-  }, [activeTab]);
-
-  // States for filters
-  const [filters, setFilters] = useState({
+  // Estados para datos de Supabase
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [monthlySales, setMonthlySales] = useState<MonthlyData[]>([]);
+  const [categoryDistribution, setCategoryDistribution] = useState<CategoryData[]>([]);
+  const [zoneSales, setZoneSales] = useState<ZoneData[]>([]);
+  const [vendorOptions, setVendorOptions] = useState<string[]>([]);
+  const [cityOptions, setCityOptions] = useState<string[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
+  const [kpisData, setKpisData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  const [filters, setFilters] = useState<DashboardFilters>({
     periodo: 'Este Mes',
     vendedor: 'Todos los Vendedores',
     ciudad: 'Todas las Ciudades',
     categoria: 'Todas las Categorías',
   });
 
-  // Filter logic
-  const filteredTransactions = useMemo(() => {
-    return INITIAL_TRANSACTIONS.filter(t => {
-      const matchSearch = t.product.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          t.salesperson.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchVendedor = filters.vendedor === 'Todos los Vendedores' || t.salesperson === filters.vendedor;
-      // Note: city and category filtering would normally be in the data model, simulating here:
-      return matchSearch && matchVendedor;
-    });
-  }, [searchQuery, filters]);
+  useEffect(() => {
+    const loadOptions = async () => {
+      try {
+        const [vendors, cities, categoriesList] = await Promise.all([
+          fetchVendors(),
+          fetchCities(),
+          fetchCategories(),
+        ]);
 
-  // Derived KPIs
-  const totalSales = useMemo(() => filteredTransactions.reduce((acc, curr) => acc + curr.total, 0), [filteredTransactions]);
-  const totalUnits = useMemo(() => filteredTransactions.reduce((acc, curr) => acc + curr.quantity, 0), [filteredTransactions]);
+        setVendorOptions(vendors);
+        setCityOptions(cities);
+        setCategoryOptions(categoriesList);
+      } catch (err) {
+        console.error('Error loading filter options:', err);
+      }
+    };
 
-  const kpis = [
-    { label: 'Ventas (Filtro)', value: `$${totalSales.toLocaleString()}.00`, trend: 4.5, icon: DollarSign, color: 'bg-blue-50 text-primary' },
-    { label: 'Cant. Filtrada', value: `${totalUnits.toLocaleString()} uds`, trend: 2.1, icon: Package, color: 'bg-indigo-50 text-indigo-700' },
-    { label: 'Margen Promedio', value: '15.4%', trend: -0.5, icon: TrendingUp, color: 'bg-teal-50 text-teal-700' },
-    { label: 'Total Clientes', value: '1,248', trend: 4.1, icon: Users, color: 'bg-sky-50 text-sky-700' },
-  ];
+    loadOptions();
+  }, []);
 
   useEffect(() => {
-    console.log(`Transacciones filtradas: ${filteredTransactions.length}`);
-  }, [filteredTransactions.length]);
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const [txns, sales, categories, zones, kpis] = await Promise.all([
+          fetchTransactions(filters),
+          fetchMonthlySales(filters),
+          fetchCategoryDistribution(filters),
+          fetchZoneSales(filters),
+          fetchKPIs(filters),
+        ]);
+
+        setTransactions(txns);
+        setMonthlySales(sales);
+        setCategoryDistribution(categories);
+        setZoneSales(zones);
+        setKpisData(kpis);
+      } catch (err) {
+        console.error('❌ Error al cargar datos:', err);
+        setError('Error al cargar datos de Supabase');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [filters]);
+
+  // Lógica de filtrado sobre datos reales
+  const filteredTransactions = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return transactions.filter((t) => {
+      const matchSearch =
+        !query ||
+        t.product.toLowerCase().includes(query) ||
+        t.salesperson.toLowerCase().includes(query) ||
+        t.ciudad?.toLowerCase().includes(query) ||
+        t.zona?.toLowerCase().includes(query);
+
+      const matchVendedor =
+        filters.vendedor === 'Todos los Vendedores' ||
+        t.salesperson === filters.vendedor;
+      const matchCiudad =
+        filters.ciudad === 'Todas las Ciudades' ||
+        t.ciudad === filters.ciudad;
+      const matchCategoria =
+        filters.categoria === 'Todas las Categorías' ||
+        t.categoria === filters.categoria;
+
+      return matchSearch && matchVendedor && matchCiudad && matchCategoria;
+    });
+  }, [searchQuery, filters, transactions]);
+
+  const totalSales = kpisData?.totalSales ?? 0;
+  const totalUnits = kpisData?.totalUnits ?? 0;
+  const avgMargin = kpisData ? kpisData.avgMargin.toFixed(2) : '0.00';
+
+  const kpis = [
+    { label: 'Ventas Totales', value: `$${totalSales.toLocaleString('es-CO', { maximumFractionDigits: 0 })}`, trend: 4.5, icon: DollarSign, color: 'bg-blue-50 text-primary' },
+    { label: 'Unidades Vendidas', value: `${totalUnits.toLocaleString()} uds`, trend: 2.1, icon: Package, color: 'bg-indigo-50 text-indigo-700' },
+    { label: 'Ticket Promedio', value: `$${parseFloat(avgMargin).toLocaleString('es-CO', { maximumFractionDigits: 0 })}`, trend: -0.5, icon: TrendingUp, color: 'bg-teal-50 text-teal-700' },
+    { label: 'Clientes Activos', value: kpisData?.totalClients?.toLocaleString() || '0', trend: 4.1, icon: Users, color: 'bg-sky-50 text-sky-700' },
+  ];
 
   const handleExport = () => {
     console.log('Inicio de exportación de reporte');
@@ -98,6 +149,34 @@ export default function App() {
   };
 
   const renderContent = () => {
+    if (loading) {
+      return (
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="flex flex-col items-center justify-center h-[60vh] text-slate-400"
+        >
+          <Loader2 className="w-12 h-12 mb-4 animate-spin text-primary" />
+          <h2 className="text-xl font-bold text-slate-600">Cargando datos...</h2>
+          <p className="text-sm">Conectando con Supabase</p>
+        </motion.div>
+      );
+    }
+
+    if (error) {
+      return (
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="flex flex-col items-center justify-center h-[60vh] text-slate-400"
+        >
+          <AlertCircle className="w-12 h-12 mb-4 text-red-500" />
+          <h2 className="text-xl font-bold text-red-600">Error al cargar datos</h2>
+          <p className="text-sm">{error}</p>
+        </motion.div>
+      );
+    }
+
     if (activeTab !== 'Dashboard') {
       return (
         <motion.div 
@@ -147,17 +226,17 @@ export default function App() {
         {/* Main Visualizations */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <motion.div transition={{ delay: 0.4 }} className="xl:col-span-1">
-            <ZoneSales />
+            <ZoneSales data={zoneSales} />
           </motion.div>
           <motion.div transition={{ delay: 0.5 }} className="xl:col-span-2">
-            <MonthlySalesChart data={MONTHLY_SALES} />
+            <MonthlySalesChart data={monthlySales.length > 0 ? monthlySales : []} />
           </motion.div>
         </div>
 
         {/* Table & Side Component */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 pb-12">
           <motion.div transition={{ delay: 0.6 }} className="xl:col-span-1">
-            <CategoryChart data={CATEGORY_DISTRIBUTION} />
+            <CategoryChart data={categoryDistribution.length > 0 ? categoryDistribution : []} />
           </motion.div>
           <motion.div transition={{ delay: 0.7 }} className="xl:col-span-3">
             <TransactionsTable data={filteredTransactions} />
@@ -215,9 +294,9 @@ export default function App() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-auto">
               {[
                 { id: 'periodo', label: 'Periodo', options: ['Este Mes', 'Último Trimestre', 'Año 2023'] },
-                { id: 'vendedor', label: 'Vendedor', options: ['Todos los Vendedores', 'Carlos Ruiz', 'Ana Martinez', 'Juan Delgado', 'Sonia Mora'] },
-                { id: 'ciudad', label: 'Ciudad', options: ['Todas las Ciudades', 'Bogotá', 'Medellín', 'Cali'] },
-                { id: 'categoria', label: 'Categoría', options: ['Todas las Categorías', 'Electricidad', 'Ferretería', 'Construcción'] },
+                { id: 'vendedor', label: 'Vendedor', options: ['Todos los Vendedores', ...vendorOptions] },
+                { id: 'ciudad', label: 'Ciudad', options: ['Todas las Ciudades', ...cityOptions] },
+                { id: 'categoria', label: 'Categoría', options: ['Todas las Categorías', ...categoryOptions] },
               ].map((filter) => (
                 <div key={filter.id} className="flex flex-col min-w-0">
                   <label className="text-[10px] font-bold text-slate-400 uppercase mb-1 ml-0.5 tracking-wider">{filter.label}</label>

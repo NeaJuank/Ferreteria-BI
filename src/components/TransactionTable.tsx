@@ -2,13 +2,6 @@ import React from 'react';
 import { Filter, Search, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { Transaction } from '../services/types';
 
-const transactions: Transaction[] = [
-  { id: '1', invoice: '#INV-8902', date: '24 Oct 2023', salesperson: 'Carlos Ruiz', product: 'Kit Herramientas Pro', quantity: 12, total: 1450, initials: 'CR' },
-  { id: '2', invoice: '#INV-8903', date: '24 Oct 2023', salesperson: 'Ana Martinez', product: 'Cable Cobre 100m', quantity: 5, total: 890, initials: 'AM' },
-  { id: '3', invoice: '#INV-8904', date: '23 Oct 2023', salesperson: 'Juan Delgado', product: 'Taladro Percutor 20V', quantity: 2, total: 540, initials: 'JD' },
-  { id: '4', invoice: '#INV-8905', date: '23 Oct 2023', salesperson: 'Sonia Mora', product: 'Pintura Vinilo Galón', quantity: 20, total: 1120, initials: 'SM' },
-];
-
 export function TransactionsTable({ data }: { data: Transaction[] }) {
   return (
     <div className="bg-white rounded-xl shadow-soft border border-slate-100 overflow-hidden">
@@ -49,7 +42,7 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
                 </td>
                 <td className="px-6 py-4 text-slate-700 text-sm font-medium">{t.product}</td>
                 <td className="px-6 py-4 text-center text-slate-700 text-sm">{t.quantity}</td>
-                <td className="px-6 py-4 text-right font-bold text-primary text-sm">${t.total.toLocaleString()}</td>
+                <td className="px-6 py-4 text-right font-bold text-primary text-sm">${t.total.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</td>
                 <td className="px-6 py-4 text-right">
                   <button 
                     onClick={() => alert(`Detalles de la factura ${t.invoice}`)}
@@ -69,7 +62,7 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
       </div>
 
       <div className="p-4 border-t border-slate-50 flex items-center justify-between">
-        <span className="text-xs text-slate-400 font-medium">Mostrando 4 de 128 registros</span>
+        <span className="text-xs text-slate-400 font-medium">Mostrando {data.length} de {data.length} registros</span>
         <div className="flex gap-1.5">
           <button className="p-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-slate-400">
             <ChevronLeft className="w-4 h-4" />

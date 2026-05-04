@@ -158,7 +158,7 @@ def upload_to_supabase(df: pd.DataFrame) -> None:
         tiempo_rows = [
             {
                 "fecha": normalize_value(row[fecha_col]),
-                "año": int(row[ano_col]) if ano_col and pd.notna(row[ano_col]) else None,
+                "ano": int(row[ano_col]) if ano_col and pd.notna(row[ano_col]) else None,
                 "mes": int(row[mes_col]) if mes_col and pd.notna(row[mes_col]) else None,
                 "dia": int(row[dia_col]) if dia_col and pd.notna(row[dia_col]) else None,
             }

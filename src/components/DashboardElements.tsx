@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
+import { ZoneData } from '../services/types';
 
 // --- Sidebar ---
 export function Sidebar({ 
@@ -316,12 +317,8 @@ export function KPICard({ label, value, trend, icon: Icon, colorClass }: { label
 }
 
 // --- Zone Sales Component ---
-export function ZoneSales() {
-  const zones = [
-    { name: 'Centro', value: 310, total: 350, color: 'bg-primary' },
-    { name: 'Norte', value: 245, total: 350, color: 'bg-secondary' },
-    { name: 'Sur', value: 177, total: 350, color: 'bg-on-primary-container text-white' },
-  ];
+export function ZoneSales({ data }: { data: ZoneData[] }) {
+  const totalSales = data.reduce((sum, zone) => sum + zone.totalSales, 0);
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-soft border border-slate-100">
@@ -330,21 +327,26 @@ export function ZoneSales() {
         <button className="text-slate-400 hover:text-slate-600"><MoreVertical className="w-5 h-5" /></button>
       </div>
       <div className="space-y-6">
-        {zones.map((zone) => (
-          <div key={zone.name}>
+        {data.length > 0 ? data.map((zone) => (
+          <div key={zone.zone}>
             <div className="flex justify-between text-sm mb-2">
-              <span className="font-medium text-slate-600">{zone.name}</span>
-              <span className="font-bold text-primary">${zone.value}k</span>
+              <span className="font-medium text-slate-600">{zone.zone}</span>
+              <span className="font-bold text-primary">${zone.totalSales.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span>
             </div>
             <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
               <div 
-                className={cn("h-full rounded-full", zone.color)} 
-                style={{ width: `${(zone.value / zone.total) * 100}%` }}
-              ></div>
+                className={cn("h-full rounded-full bg-primary")}
+                style={{ width: `${zone.percentage}%` }}
+              />
             </div>
           </div>
-        ))}
+        )) : (
+          <div className="text-slate-500 text-sm">No hay datos de zona disponibles.</div>
+        )}
       </div>
+      {totalSales > 0 && (
+        <div className="mt-6 text-xs text-slate-500">Total por zona: ${totalSales.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</div>
+      )}
     </div>
   );
 }

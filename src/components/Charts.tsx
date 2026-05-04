@@ -60,6 +60,8 @@ export function MonthlySalesChart({ data }: { data: MonthlyData[] }) {
 
 // --- Category Distribution ---
 export function CategoryChart({ data }: { data: CategoryData[] }) {
+  const total = data.reduce((sum, item) => sum + item.value, 0);
+
   return (
     <div className="bg-white p-6 rounded-xl shadow-soft border border-slate-100 flex flex-col items-center">
       <h3 className="font-bold text-lg text-primary mb-8 self-start">Distribución Categoría</h3>
@@ -79,11 +81,11 @@ export function CategoryChart({ data }: { data: CategoryData[] }) {
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip formatter={(value: number) => `$${value.toLocaleString('es-CO', { maximumFractionDigits: 0 })}`} />
           </PieChart>
         </ResponsiveContainer>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <span className="text-xl font-bold text-primary leading-none">100%</span>
+          <span className="text-xl font-bold text-primary leading-none">{total > 0 ? `$${Math.round(total).toLocaleString('es-CO')}` : '0'}</span>
           <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Total</span>
         </div>
       </div>
@@ -94,7 +96,7 @@ export function CategoryChart({ data }: { data: CategoryData[] }) {
               <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color }}></span>
               <span className="text-slate-600 font-medium">{cat.name}</span>
             </div>
-            <span className="font-bold text-primary">{cat.value}%</span>
+            <span className="font-bold text-primary">${cat.value.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span>
           </div>
         ))}
       </div>

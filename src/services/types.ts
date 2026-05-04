@@ -7,6 +7,9 @@ export interface Transaction {
   quantity: number;
   total: number;
   initials: string;
+  ciudad?: string;
+  zona?: string;
+  categoria?: string;
 }
 
 export interface KPIStats {
@@ -26,4 +29,23 @@ export interface CategoryData {
   name: string;
   value: number;
   color: string;
+}
+
+export interface ZoneData {
+  zone: string;
+  totalSales: number;
+  percentage: number;
+}
+
+export interface DashboardFilters {
+  vendedor?: string;
+  ciudad?: string;
+  categoria?: string;
+  periodo?: string;
+}
+
+export interface ZoneData {
+  zone: string;
+  totalSales: number;
+  percentage: number;
 }

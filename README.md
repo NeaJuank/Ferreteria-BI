@@ -44,11 +44,11 @@ pip install -r requirements.txt
 
 ### Configurar variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto `Ferreteria-BI` con las siguientes variables. Quitar los `$` y reemplazar por tus valores reales:
+Crea un archivo `.env` en la raíz del proyecto `Ferreteria-BI` con las siguientes variables. Reemplaza los valores con los de tu proyecto Supabase:
 
 ```env
-VITE_SUPABASE_URL= $https$://wbucudmgdxzjycszfmws.supabase.co$
-VITE_SUPABASE_KEY= $sb_$secret_UpyW1e4qziE21uGtazPRtg_jrJZb_oP$
+VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+VITE_SUPABASE_KEY=your_public_anon_key
 ```
 
 Si no configuras Supabase, el ETL seguirá generando el archivo `etl/data/output.xlsx`, pero no subirá los datos al servicio.

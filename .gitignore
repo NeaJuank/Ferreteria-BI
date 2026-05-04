@@ -6,3 +6,14 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Python artifacts
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pytest_cache/
+*.pyc
+# ETL output
+etl/data/output.xlsx
+
