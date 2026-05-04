@@ -167,7 +167,7 @@ def upload_to_supabase(df: pd.DataFrame) -> None:
 
     segmento_map = {}
     if segmento_rows:
-        segmento_map = _insert_dimension_rows(client, "dim_segmento_cliente", ["ciudad", "zona", "tipo_cliente", "proveedor"], segmento_rows)
+        segmento_map = _insert_dimension_rows(client, "dim_segmento_venta", ["ciudad", "zona", "tipo_cliente", "proveedor"], segmento_rows)
 
     producto_map = {}
     if producto_rows:
@@ -191,7 +191,7 @@ def upload_to_supabase(df: pd.DataFrame) -> None:
         fact_rows.append(
             {
                 "factura": normalize_value(row[factura_col]) if factura_col else None,
-                "segmento_cliente_id": segmento_map.get(
+                "segmento_venta_id": segmento_map.get(
                     (
                         normalize_value(row[ciudad_col]) if ciudad_col else None,
                         normalize_value(row[zona_col]) if zona_col else None,

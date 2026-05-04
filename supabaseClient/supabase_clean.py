@@ -6,7 +6,7 @@ def clear_supabase_data() -> None:
     client = get_supabase_client()
     tables = [
         "fact_ventas",
-        "dim_segmento_cliente",
+        "dim_segmento_venta",
         "dim_producto",
         "dim_vendedor",
         "dim_metodo_pago",
