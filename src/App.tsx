@@ -35,16 +35,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    console.log("supabase")
-    if(supabase){
-      console.log('Supabase client inicializado correctamente');
-    } else{
-      console.error('Error al inicializar Supabase client');
-    }
-  }, [])
+    console.log("Dashboard cargado");
+  }, []);
 
   useEffect(() => {
-    console.log('Búsqueda actualizada:', searchQuery);
+    console.log("supabase");
+    if(supabase) {
+      console.log("supabase client inicializado correctamente");
+    } else {
+      console.error("Error al inicializar supabase client");
+    }
   }, [searchQuery]);
 
   useEffect(() => {
@@ -268,5 +268,7 @@ export default function App() {
       </nav>
     </div>
   );
+
+  
 }
 

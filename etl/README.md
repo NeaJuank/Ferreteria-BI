@@ -63,14 +63,16 @@ pip freeze > requirements.txt
 
 ## Supabase
 
-1. Copia en `.env.example` y renombra a `.env` (está en la raiz del proyecto) y quitar los porcentajes del inicio y final:
+1. Copia el archivo `.env.example` y renómbralo a `.env` en la raíz del proyecto. Reemplaza los valores de ejemplo con tus credenciales reales de Supabase:
 
-```env 
-VITE_SUPABASE_URL= $https$://wbucudmgdxzjycszfmws.supabase.co$
-VITE_SUPABASE_KEY= $sb_secret$_UpyW1e4qziE21uGtazPRtg_jrJZb_oP$
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_KEY=your-service-key
 ```
 
-2. tablas de supabase por si no se desea mirar alli `supabase_schema.sql`.
+2. Si no deseas subir datos a Supabase, el pipeline aún generará `etl/data/output.xlsx` localmente.
+
+3. Tablas de Supabase por si no se desea mirar allí: `supabase_schema.sql`.
 
 3. Ejecuta la limpieza total de datos si necesitas comenzar desde cero:
 

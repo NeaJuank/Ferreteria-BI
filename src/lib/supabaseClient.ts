@@ -1,10 +1,13 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  throw new Error('VITE_SUPABASE_URL and VITE_SUPABASE_KEY must be provided in .env');
+  console.warn('VITE_SUPABASE_URL and VITE_SUPABASE_KEY are not configured. Supabase client will not be initialized.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase: SupabaseClient | null =
+  supabaseUrl && supabaseKey
+    ? createClient(supabaseUrl, supabaseKey)
+    : null;
