@@ -21,6 +21,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
 import { INITIAL_TRANSACTIONS, MONTHLY_SALES, CATEGORY_DISTRIBUTION } from './services/mockData';
+import { supabase } from './lib/supabaseClient';
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -34,7 +35,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    console.log('Búsqueda actualizada:', searchQuery);
+    console.log("Dashboard cargado");
+  }, []);
+
+  useEffect(() => {
+    console.log("supabase");
+    if(supabase) {
+      console.log("supabase client inicializado correctamente");
+    } else {
+      console.error("Error al inicializar supabase client");
+    }
   }, [searchQuery]);
 
   useEffect(() => {
@@ -258,5 +268,7 @@ export default function App() {
       </nav>
     </div>
   );
+
+  
 }
 

@@ -13,7 +13,11 @@ def main() -> None:
     df = read_excel(INPUT_PATH)
     df_clean = clean_data(df)
     save_excel(df_clean, OUTPUT_PATH)
-    upload_to_supabase(df_clean)
+    try:
+        upload_to_supabase(df_clean)
+    except EnvironmentError as exc:
+        logging_step_process(str(exc))
+        logging_step_process("Supabase no está configurado. El ETL terminó guardando el archivo localmente.")
     logging_step_process("Proceso finalizado")
 
 if __name__ == "__main__":
